@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout_back :: back-head('我的首页')"></head>
+<body>
+
+<div class="layout">
+    <aside th:replace="layout_back :: back-sidebar('user-dashboard')"></aside>
+
+    <div class="main">
+        <header th:replace="layout_back :: back-topbar('我的图书总览')"></header>
+
+        <main class="content">
+
+            <!-- 顶部欢迎 -->
+            <div class="card-back mb-3">
+                <h5 class="mb-1">欢迎回来，<span th:text="${session.user.username}">用户</span> 👋</h5>
+                <div class="text-muted small">
+                    在这里你可以快速查看自己当前的借阅情况，并进入图书浏览 / 我的借阅页面。
+                </div>
+            </div>
+
+            <!-- 统计卡片 -->
+            <div class="row g-3 mb-3">
+                <div class="col-md-3 col-6">
+                    <div class="card-back d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-title">累计借阅</div>
+                            <div class="stat-value" th:text="${totalCount}">0</div>
+                            <div class="stat-extra">你一共借过多少本书</div>
+                        </div>
+                        <div class="stat-icon bg-blue-soft">
+                            <i class="bi bi-collection"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="card-back d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-title">当前在借</div>
+                            <div class="stat-value" th:text="${borrowingCount}">0</div>
+                            <div class="stat-extra">还在你手上的书</div>
+                        </div>
+                        <div class="stat-icon bg-emerald-soft">
+                            <i class="bi bi-book-half"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="card-back d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-title">已归还</div>
+                            <div class="stat-value" th:text="${returnedCount}">0</div>
+                            <div class="stat-extra">已经放回图书馆的书</div>
+                        </div>
+                        <div class="stat-icon bg-yellow-soft">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="card-back d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-title">逾期未还</div>
+                            <div class="stat-value" th:text="${overdueCount}">0</div>
+                            <div class="stat-extra"
+                                 th:text="'逾期阈值：' + ${overdueDays} + ' 天'">
+                                逾期阈值：30 天
+                            </div>
+                        </div>
+                        <div class="stat-icon bg-red-soft">
+                            <i class="bi bi-bell"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 最近借阅列表示例 -->
+            <div class="card-back">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <h6 class="mb-1">最近借阅记录</h6>
+                        <div class="text-muted small">
+                            最近 5 条记录，更多请查看【我的借阅】
+                        </div>
+                    </div>
+                    <a class="btn btn-sm btn-outline-primary" th:href="@{/user/my-borrows}">
+                        <i class="bi bi-list-ul"></i> 查看全部
+                    </a>
+                </div>
+
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>图书ID</th>
+                        <th>借阅时间</th>
+                        <th>归还时间</th>
+                        <th>状态</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="br : ${recentBorrows}">
+                        <td th:text="${br.id}">1</td>
+                        <td th:text="${br.bookId}">1</td>
+                        <td th:text="${#temporals.format(br.borrowTime, 'yyyy-MM-dd HH:mm')}">
+                            2025-01-01 10:00
+                        </td>
+                        <td th:text="${br.returnTime != null ? #temporals.format(br.returnTime,'yyyy-MM-dd HH:mm') : '-'}">
+                            -
+                        </td>
+                        <td>
+                            <span th:if="${br.status == 'BORROWED'}" class="badge bg-warning text-dark">
+                                在借
+                            </span>
+                            <span th:if="${br.status == 'RETURNED'}" class="badge bg-success">
+                                已还
+                            </span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(recentBorrows)}">
+                        <td colspan="5" class="text-center text-muted py-4">
+                            暂无借阅记录
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<footer th:replace="layout_back :: back-footer"></footer>
+</body>
+</html>

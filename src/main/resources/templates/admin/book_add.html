@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>阿里图书后台管理系统 - 新增图书</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <style>
+    body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:#f3f4f6;}
+    .layout{ display:grid; grid-template-columns:260px 1fr; min-height:100vh;}
+    .sidebar{ background:#020617; color:#e5e7eb; display:flex; flex-direction:column;}
+    .sidebar-header{ padding:18px 20px; display:flex; align-items:center; gap:10px;
+      border-bottom:1px solid rgba(148,163,184,.15);}
+    .sidebar-header-icon{ width:34px;height:34px;border-radius:8px;
+      background:linear-gradient(135deg,#4f46e5,#06b6d4);display:flex;align-items:center;
+      justify-content:center;font-size:20px;}
+    .sidebar-title{ font-size:18px;font-weight:600;}
+    .menu{ padding:16px 0; flex:1;}
+    .menu-section-title{ font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+      color:#6b7280;padding:0 20px;margin-top:12px;margin-bottom:6px;}
+    .menu-item{ display:flex;align-items:center;padding:10px 20px;gap:10px;color:#9ca3af;
+      font-size:14px;cursor:pointer;text-decoration:none;transition:.15s;}
+    .menu-item:hover{ background:rgba(148,163,184,.12);color:#e5e7eb;}
+    .menu-item.active{ background:linear-gradient(90deg,#1d4ed8,#0ea5e9);color:#fff;}
+    .menu-item i{ width:18px;text-align:center;}
+    .sidebar-footer{ padding:10px 20px 16px;border-top:1px solid rgba(148,163,184,.15);
+      font-size:12px;color:#6b7280;}
+
+    .main{ display:flex;flex-direction:column;}
+    .topbar{ height:60px;border-bottom:1px solid #e5e7eb;background:#fff;
+      display:flex;align-items:center;justify-content:space-between;padding:0 24px;}
+    .topbar-title{ font-size:18px;font-weight:600;}
+    .topbar-user{ display:flex;align-items:center;gap:10px;font-size:14px;}
+    .topbar-user span{ color:#4b5563;}
+    .topbar-user small{ color:#9ca3af;}
+    .content{ padding:20px 24px 28px;overflow:auto;}
+
+    .card-panel{ border-radius:16px;background:#fff;
+      box-shadow:0 12px 32px rgba(148,163,184,.25);padding:18px 20px;max-width:600px;}
+    @media(max-width:960px){ .layout{grid-template-columns:220px 1fr;} }
+    @media(max-width:768px){ .layout{grid-template-columns:1fr;} .sidebar{display:none;} }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-header-icon">
+        <i class="bi bi-book"></i>
+      </div>
+      <div><div class="sidebar-title">图书后台管理系统</div></div>
+    </div>
+
+    <div class="menu">
+      <div class="menu-section-title">概览</div>
+      <a class="menu-item" th:href="@{/admin/dashboard}">
+        <i class="bi bi-grid-1x2-fill"></i><span>总览</span>
+      </a>
+
+      <div class="menu-section-title">功能</div>
+      <a class="menu-item active" th:href="@{/admin/books}">
+        <i class="bi bi-journal-bookmark"></i><span>图书管理</span>
+      </a>
+      <a class="menu-item" th:href="@{/admin/borrows}">
+        <i class="bi bi-card-checklist"></i><span>借阅管理</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      LibrarySystem 后台
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-title">新增图书</div>
+      <div class="topbar-user">
+        <i class="bi bi-person-circle"></i>
+        <div>
+          <span th:text="${session.user != null ? session.user.username : '管理员'}">admin</span>
+          <small class="d-block">管理员</small>
+        </div>
+        <a class="btn btn-sm btn-outline-secondary" th:href="@{/logout}">退出</a>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="card-panel">
+        <h5 class="mb-3">填写图书信息</h5>
+
+        <form method="post" th:action="@{/admin/book/add}">
+          <div class="mb-3">
+            <label class="form-label">书名</label>
+            <input class="form-control" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">作者</label>
+            <input class="form-control" name="author">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">分类</label>
+            <input class="form-control" name="category">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">总数</label>
+            <input class="form-control" name="total" type="number" min="0" value="1">
+          </div>
+          <div class="d-flex justify-content-between">
+            <a class="btn btn-outline-secondary"
+               th:href="@{/admin/books}">返回列表</a>
+            <button class="btn btn-primary" type="submit">
+              <i class="bi bi-check2-circle"></i> 保存
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

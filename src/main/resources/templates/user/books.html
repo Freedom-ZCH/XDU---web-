@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout_back :: back-head('图书浏览')"></head>
+<body>
+
+<div class="layout">
+    <aside th:replace="layout_back :: back-sidebar('user-books')"></aside>
+
+    <div class="main">
+        <header th:replace="layout_back :: back-topbar('图书浏览')"></header>
+
+        <main class="content">
+
+            <div class="card-back mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <h5 class="mb-1">图书列表</h5>
+                        <div class="text-muted small">浏览并借阅你感兴趣的图书</div>
+                    </div>
+
+                    <form class="d-flex" method="get" th:action="@{/user/books}">
+                        <input class="form-control form-control-sm me-2"
+                               name="keyword"
+                               placeholder="书名 / 作者 / 分类"
+                               th:value="${keyword}">
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-search"></i> 搜索
+                        </button>
+                    </form>
+                </div>
+
+                <!-- 错误提示（比如库存不足、已达到最大借书数量等） -->
+                <div th:if="${error != null}" class="alert alert-danger py-2 small">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    <span th:text="${error}">错误信息</span>
+                </div>
+
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>书名</th>
+                        <th>作者</th>
+                        <th>分类</th>
+                        <th>总数</th>
+                        <th>可借</th>
+                        <th style="width: 120px;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="b : ${books}">
+                        <td th:text="${b.id}">1</td>
+                        <td th:text="${b.title}">书名</td>
+                        <td th:text="${b.author}">作者</td>
+                        <td th:text="${b.category}">分类</td>
+                        <td th:text="${b.total}">0</td>
+                        <td th:text="${b.available}">0</td>
+                        <td>
+                            <a th:if="${b.available > 0}"
+                               class="btn btn-sm btn-primary"
+                               th:href="@{'/user/borrow/' + ${b.id}}">
+                                <i class="bi bi-bag-plus"></i> 借阅
+                            </a>
+                            <span th:if="${b.available <= 0}" class="text-danger small">
+                                暂无库存
+                            </span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(books)}">
+                        <td colspan="7" class="text-center text-muted py-4">
+                            未找到图书
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<footer th:replace="layout_back :: back-footer"></footer>
+</body>
+</html>
