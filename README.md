@@ -1,3 +1,6 @@
+![Python](https://img.shields.io/badge/Python-3.8+-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Status](https://img.shields.io/badge/Project-In--Progress-yellow)
 # Library System（图书借阅管理系统）
 
 本项目是一个基于 Spring Boot + Thymeleaf + MySQL 实现的图书借阅管理系统，支持用户注册登录、图书查询与借阅、管理员图书管理等功能，适用于课程设计与实验项目展示。
